@@ -249,7 +249,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
     # create c3: two steps:
     # 1) squares of a3 - unary operations 
     # we kept itertools.combinations to make the code more uniform with the binary operations
-    for subset in itertools.combinations(col_a3, 1):
+    for subset in itertools.combinations(col_a3, 1): # X^2, X^3
         if '^2' in allowed_operations:
             cols = [subset[0]+'^2']        
             data = df_a3[list(subset)].apply(_my_power_2, axis=1)            
@@ -261,7 +261,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
 
             
     # 2) squares of b3 (only sums) --> sum squared of a3
-    for subset in itertools.combinations(col_a3, 2):
+    for subset in itertools.combinations(col_a3, 2): #(x+y)^2, (x+y)^3
         if '^2' in allowed_operations:
             cols = ['('+subset[0]+'+'+subset[1]+')^2']   
             data = df_a3[list(subset)].apply(_my_sum_power_2, axis=1)            
@@ -275,7 +275,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
     # create d3: two steps:
     # 1) exponentials of a3 - unary operations 
     # we kept itertools.combinations to make the code more uniform with the binary operations
-    for subset in itertools.combinations(col_a3, 1):
+    for subset in itertools.combinations(col_a3, 1): #e^x
         if 'exp' in allowed_operations:
             cols = ['exp('+subset[0]+')']      
             df_subset = df_a3[list(subset)]
@@ -283,7 +283,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
             df_d3_list.append(pd.DataFrame(data, columns=cols))    
             
     # 2) exponentials of b3 (only sums) --> exponential of sum of a3
-    for subset in itertools.combinations(col_a3, 2):
+    for subset in itertools.combinations(col_a3, 2): #e^(x+y)
         if 'exp' in allowed_operations:
             cols = ['exp('+subset[0]+'+'+subset[1]+')']    
             df_subset = df_a3[list(subset)]
@@ -293,7 +293,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
     # create e3: two steps:
     # 1) exponentials of squared a3 - unary operations 
     # we kept itertools.combinations to make the code more uniform with the binary operations
-    for subset in itertools.combinations(col_a3, 1):
+    for subset in itertools.combinations(col_a3, 1): # e^(x^2)
         operations={'exp', '^2'}
         if operations <= set(allowed_operations):
             cols = ['exp('+subset[0]+'^2)']
@@ -302,7 +302,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
             df_e3_list.append(pd.DataFrame(data, columns=cols))    
             
         operations={'exp', '^3'}
-        if operations <= set(allowed_operations):
+        if operations <= set(allowed_operations): # e^(x^3)
             try:
                 cols = ['exp('+subset[0]+'^3)']
                 df_subset = df_a3[list(subset)]
@@ -313,7 +313,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
 
             
     # 2) exponentials of b3 (only sums) --> exponential of sum of a3
-    for subset in itertools.combinations(col_a3, 2):
+    for subset in itertools.combinations(col_a3, 2): # e^((x+y)^2)
         operations={'exp', '^2'}
         if operations <= set(allowed_operations):
             cols = ['exp(('+subset[0]+'+'+subset[1]+')^2)']
@@ -322,7 +322,7 @@ def combine_features(df=None, allowed_operations=None, is_print=True):
             df_e3_list.append(pd.DataFrame(data, columns=cols))        
 
         operations={'exp', '^3'}
-        if operations <= set(allowed_operations):
+        if operations <= set(allowed_operations): # e^((x+y)^3)
             try:
                 cols = ['exp(('+subset[0]+'+'+subset[1]+')^3)']
                 df_subset = df_a3[list(subset)]
